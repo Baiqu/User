@@ -1,0 +1,635 @@
+﻿
+@{
+    ViewBag.Title = "用户详情";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="/Home">首页</a>
+        </li>
+        <li>
+            <i class="icon-user"></i>
+            <a href="/User/Index">会员管理</a>
+        </li>
+        <li class="active">
+            会员详细信息
+        </li>
+    </ul>
+}
+@section pageheader{
+    <div class="page-header">
+        <h1>
+            会员信息
+            <small>
+                <i class="icon-double-angle-right"></i>
+                查看
+            </small>
+        </h1>
+    </div>
+}
+@section jquery_gritter_css{
+    <link href="~/assets/ace/css/chosen.css" rel="stylesheet" />
+}
+@section customizeheader{
+    <style type="text/css">
+        .black { color: #000 !important; }
+
+        .gold { color: #f89406 !important; }
+    </style>
+
+    <script src="~/assets/Scripts/ko-pager.js" type="text/javascript"></script>
+    <script src="~/assets/ace/js/chosen.jquery.min.js"></script>
+    <script src="~/assets/Scripts/support_banks.js"></script>
+    <script src="~/assets/Scripts/china_area.js"></script>
+    <script type="text/javascript">
+        koViewModel.prototype.deleteBankCard = function (data, element) {
+            if (!confirm('确认要删除此银行卡吗？')) {
+                return;
+            }
+            $.ajax({
+                url: "/User/Delete",
+                type: "post",
+                data: {
+                    id: data.Acctid
+                },
+                success: function (res) {
+                    if (!res.Success) {
+                        alert("删除失败，请重试！");
+                        return;
+                    }
+                    window.location.href = window.location.href;
+                },
+                error: function () {
+
+                }
+            })
+        }
+
+
+        //更换推荐人
+        function ReplaceIntroducer() {
+
+            // $("#txtIntroducer").val("")
+            if ($("#txtIntroducer").val() == "") {
+                bootbox.alert("推荐人账号不能为空");
+                $("#txtIntroducer").focus();
+                return false;
+            }
+            $.post("/User/ChangeReferUser",
+                {
+                    "refereeCode": $("#txtIntroducer").val(),
+                    "userId": "@ViewContext.RouteData.Values["id"]"
+                }, function (obj) {
+                    if (!obj.Success) {
+                        bootbox.alert(obj.Message);
+                    } else {
+                        bootbox.alert("操作成功",function(){
+                            window.location = window.location;
+                        });
+                    }
+
+                })
+        }
+
+        $(function () {
+            //$("#addnew_bankname").bindBankOptions();
+            InitOption("addnew_province", "addnew_city", "");
+            $("#addnew_city").change(function () {
+                $.ajax({
+                    url: "/home/GetBranchBanks",
+                    type: "post",
+                    data: {
+                        cityid: $("#addnew_city").val(),
+                        bankid: $("#addnew_bankname").val()
+                    },
+                    success: function (res) {
+                        if (res.Success && res.Content && res.Content.Data) {
+                            $("#addnew_branchbank").empty();
+                            for (var i in res.Content.Data) {
+                                var option = $("<option></option>").val(res.Content.Data[i].Branchno).text(res.Content.Data[i].BranchName);
+                                $("#addnew_branchbank").append(option);
+                            }
+                            $("#addnew_branchbank").trigger("chosen:updated");
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            });
+
+
+            renderBankcardInfo();
+            renderUserInfo();
+            renderAccountInfo();
+            $("#btnChangeIntroducer").click(function () {
+                $("#change-introducer-table").modal({});
+            });
+
+            $("#btnChangeInstitude").click(function () {
+                $("#change-institude-table").modal({});
+            });
+
+            $("#btnAddNewBankCard").click(function () {
+                $("#add-new-bankcard").modal({});
+            });
+            $("#addnew_branchbank,.jq-chosen-select").chosen({ width: '100%', search_contains: true, });
+            $("#btnBindNewBankCard").click(function () {
+                $.ajax({
+                    url:"/user/bindnewbankaccount",
+                    type:"post",
+                    data: {
+                        nodeid:@ViewContext.RouteData.Values["id"],
+                        cardno:$("#addnew_bankcardno").val(),
+                        bankname:$("#addnew_bankname option:selected").text(),
+                        bankid:$("#addnew_bankname").val(),
+                        branchname:$("#addnew_branchbank option:selected").text(),
+                        branchno:$("#addnew_branchbank").val(),
+                        provinceid:$("#addnew_province").val(),
+                        cityid:$("#addnew_city").val()
+                    },
+                    success:function(res){
+                        if(res.Success){
+                            alert("操作成功");
+                            $("#add-new-bankcard").modal("hide");
+                            renderBankcardInfo();
+                        }else{
+                            alert(res.Message);
+                        }
+                    },
+                    error:function(){
+                        alert("连接服务器失败");
+                    }
+                });
+            });
+        });
+
+
+        function renderBankcardInfo(){
+            $.DT.init({
+                "eleid": "bank-card-table",
+                "url": "/User/GetUserBankCard",
+                "enablePaginate": false,
+                "query": {
+                    "userId": '@ViewContext.RouteData.Values["id"]'
+                }
+            });
+        }
+        function renderAccountInfo(){
+            $.DT.init({
+                "eleid": "walletaccountinfo",
+                "url": "/User/GetUserAccountInfo",
+                "enablePaginate": false,
+                "query": {
+                    "userId": '@ViewContext.RouteData.Values["id"]'
+                }
+            });
+        }
+        function renderUserInfo(){
+            $.ajax({
+                url:"@Url.Action("GetUserInfo")",
+                type:"POST",
+                data:{
+                    userId:@ViewContext.RouteData.Values["id"],
+                },
+                success:function(json){
+                    if(json.Success){
+                        ko.applyBindings(json.Content,document.getElementById("user_basic_info"));
+                    }else{
+                        var message = json.Message||'加载用户基础信息失败';
+                        bootbox.alert(message);
+                    }
+                },
+                error:function(){
+
+                }
+            })
+        }
+
+
+    </script>
+}
+
+<form action="/User/Profiles/" method="post">
+    <div class="">
+        <div class="user-profile" id="user-profile-2">
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-18">
+                    <li class="active">
+                        <a href="#user_basic_info" data-toggle="tab">
+                            <i class="green icon-user bigger-120"></i>
+                            基本资料
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#paymemberfee" data-toggle="tab">
+                            <i class="orange icon-credit-card bigger-120"></i>
+                            银行卡信息
+                        </a>
+                    </li>
+                    <!--
+                    <li>
+                        <a href="#friends" data-toggle="tab">
+                            <i class="blue icon-info bigger-120"></i>
+                            认证信息
+                        </a>
+                    </li>
+                    -->
+                    <li class="">
+                        <a href="#walletaccountinfo" data-toggle="tab">
+                            <i class="pink icon-credit-card bigger-120"></i>
+                            账户信息
+                        </a>
+                    </li>
+                    <!--
+                    <li class="">
+                        <a href="#consumeinfo" data-toggle="tab">
+                            <i class="gold icon-list-ul bigger-120"></i>
+                            消费订单
+                        </a>
+                    </li>
+                    -->
+                </ul>
+
+                <div class="tab-content no-border padding-24">
+                    <div class="tab-pane active" id="user_basic_info">
+                        <div class="row">
+
+
+                            <div class="col-xs-12 col-sm-9">
+
+                                <div class="center">
+
+                                </div>
+
+                                <div class="profile-user-info">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 用户姓名 </div>
+                                        <div class="profile-info-value" data-bind="text:user_name">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 手机号码 </div>
+                                        <div class="profile-info-value" data-bind="text:user_code">
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 是否认证 </div>
+                                        <div class="profile-info-value">
+                                            <div>
+                                                <span data-bind="visible:auth_status==0">未认证</span>
+                                                <span data-bind="visible:auth_status==1">认证中</span>
+                                                <span data-bind="visible:auth_status==2">已认证</span>
+                                                <span data-bind="visible:auth_status==4">认证失败</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 推荐人 </div>
+
+                                        <div class="profile-info-value">
+                                            <a target="_blank" href="/User/details/" data-bind="attr:{'href':'/user/details/'+refer_id}">
+                                                <span data-bind="text:refer_name"></span>[<span data-bind="text:refer_code"></span>]
+                                            </a>
+                                            <span class="" style="margin-left:100px;">
+                                                <button type="button" id="btnChangeIntroducer" class="btn btn-minier btn-primary no-padding-top no-padding-bottom">更换推荐人</button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            注册时间
+                                        </div>
+                                        <div class="profile-info-value" data-bind="text:register_time">
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name">
+                                            邮箱地址
+                                        </div>
+                                        <div class="profile-info-value" data-bind="text:email">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /span -->
+                        </div><!-- /row-fluid -->
+
+                        <div class="space-20"></div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12">
+                                <div class="widget-box transparent">
+                                    <div class="widget-header widget-header-small">
+                                        <h4 class="smaller">
+                                            <i class="icon-check bigger-110"></i>
+                                            实名信息
+                                        </h4>
+                                    </div>
+
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="profile-user-info">
+                                                <div class="profile-info-row">
+                                                    <div class="profile-info-name"> 真实姓名 </div>
+                                                    <div class="profile-info-value" data-bind="text:real_name">
+                                                    </div>
+                                                </div>
+
+                                                <div class="profile-info-row">
+                                                    <div class="profile-info-name">
+                                                        身份证号码
+                                                    </div>
+                                                    <div class="profile-info-value" data-bind="text:identity_no">
+                                                    </div>
+                                                </div>
+
+                                                <div class="profile-info-row">
+                                                    <div class="profile-info-name">
+                                                        出生日期
+                                                    </div>
+                                                    <div class="profile-info-value" data-bind="text:birthday">
+                                                    </div>
+                                                </div>
+                                                <div class="profile-info-row">
+                                                    <div class="profile-info-name">
+                                                        性别
+                                                    </div>
+                                                    <div class="profile-info-value" data-bind="text:gender==1?'男':'女'">
+                                                    </div>
+                                                </div>
+                                                <div class="profile-info-row">
+                                                    <div class="profile-info-name">
+                                                        认证时间
+                                                    </div>
+                                                    <div class="profile-info-value" data-bind="text:auth_time">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- #home 用户基础信息 -->
+
+                    <div class="tab-pane" id="paymemberfee">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" id="btnAddNewBankCard" class="btn btn-primary">
+                                    <i class="icon icon-plus"></i>
+                                    添加银行卡
+                                </button>
+                            </div>
+                        </div>
+                        <hr />
+                        <!-- 缴费记录 -->
+                        <div class="profile-feed row-fluid">
+                            <table class="table table-striped table-bordered" id="bank-card-table">
+                                <thead>
+                                    <tr>
+                                        <td>银行卡号</td>
+                                        <td>持卡人</td>
+                                        <td>银行名称</td>
+                                        <td>银行卡种类</td>
+                                        <td>支行信息</td>
+                                        <td>开户省份</td>
+                                        <td>账户类型</td>
+                                        <td>绑定时间</td>
+                                        <td>状态</td>
+                                        <td>操作</td>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="template:{name:'memberfeeTemplate',foreach:Data}"></tbody>
+                            </table>
+                        </div><!-- /row -->
+                        <script type="text/x-jquery-tmpl" id="memberfeeTemplate">
+                            <tr data-bind="style:{'color':(status==4?'red':'')}">
+                                <td data-bind="text:card_no"></td>
+                                <td data-bind="text:account_name"></td>
+                                <td data-bind="text:bank_name"></td>
+                                <td data-bind="html:account_type"></td>
+                                <td data-bind="html:branch_bank"></td>
+                                <td data-bind="text:province_name"></td>
+                                <td data-bind="html:account_type"></td>
+                                <td data-bind="html:createtime"></td>
+                                <td data-bind="text:status"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" type="button" data-bind="event:{'click':$root.deleteBankCard},visible:status==4">
+                                        <i class="icon-trash"></i>
+                                        删除
+                                    </button>
+                                </td>
+                            </tr>
+                        </script>
+                    </div><!-- /#feed -->
+
+                    <div class="tab-pane" id="friends">
+                        <!--邀请人列表-->
+                        <div class="profile-users clearfix">
+                            <table class="table table-bordered table-striped" id="payments-table">
+                                <thead>
+                                    <tr>
+                                        <td>项目名称</td>
+                                        <td>用户姓名 </td>
+                                        <td>购买份数</td>
+                                        <td>购买时间</td>
+                                        <td>起息日</td>
+                                        <td>投资状态</td>
+                                        <td>完成赎回日期</td>
+                                        <td>到期日</td>
+                                        <td>购买总金额</td>
+                                        <td>使用金豆数量</td>
+                                        <td>使用红包数量</td>
+                                        <td>实际支付金额</td>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="template:{'name':'invitesTemplate',foreach:Data}"></tbody>
+                            </table>
+                            <script type="text/x-jquery-tmpl" id="invitesTemplate">
+                                <tr>
+                                    <td data-bind="text:Projectname"></td>
+                                    <td data-bind="text:Nodename"></td>
+                                    <td data-bind="text:Copies"></td>
+                                    <td data-bind="html:renderTime(Createtime)"></td>
+                                    <td data-bind="html:renderTime(Valueday)"></td>
+                                    <td data-bind="html:renderStatus(Status)"></td>
+                                    <td data-bind="html:renderStatus(Ransomday)"></td>
+                                    <td data-bind="html:renderTime(Expiretime)"></td>
+                                    <td data-bind="text:Amount"></td>
+                                    <td data-bind="text:Goldbean"></td>
+                                    <td data-bind="text:Redenvelop"></td>
+                                    <td data-bind="text:Payamount"></td>
+                                </tr>
+
+                            </script>
+                        </div>
+
+                    </div><!-- /#friends -->
+
+                    <div id="walletaccountinfo" class="tab-pane">
+                        <div class="row-fluid">
+                            <div class="col-xs-6">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>钱包类型</th>
+                                            <th>总余额</th>
+                                            <th>可用余额</th>
+                                            <th>冻结金额</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="template:{'name':'account-info-template',foreach:Data}"></tbody>
+                                    @*<tbody data-bind="template:{'name':'walletaccountinfoTemplate',foreach:Data}"></tbody>*@
+                                </table>
+                            </div>
+                            <script type="text/x-jquery-tmpl" id="account-info-template">
+                                <tr>
+                                    <td data-bind="text:PurseName"></td>
+                                    <td><span data-bind="text:Balance+FreezeValue"></span><span style="padding-left:10px;"></span></td>
+                                    <td><span data-bind="text:Balance"></span><span style="padding-left:10px;"></span></td>
+                                    <td><span data-bind="text:FreezeValue"></span><span style="padding-left:10px;"></span></td>
+                                </tr>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row modal-row">
+    <div tabindex="-1" class="modal fade" id="change-introducer-table" style="display: none;z-index:99999" aria-hidden="true">
+        <div class="modal-dialog" style="padding-top:200px;">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                            <span class="white">×</span>
+                        </button>
+                        <span><span></span>更换推荐人</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-xs-3 text-right">推荐人账号</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="txtIntroducer" class="text col-xs-12" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <button data-dismiss="modal" class="btn btn-sm btn-danger pull-left">
+                        <i class="icon-remove"></i>
+                        关闭
+                    </button>
+                    <button data-dismiss="modal" class="btn btn-sm btn-success pull-right" id="btnconfim" onclick="ReplaceIntroducer()">
+                        <i class="icon-ok"></i>
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row modal-row">
+    <div tabindex="-1" class="modal fade" id="change-institude-table" style="display: none;z-index:99999" aria-hidden="true">
+        <div class="modal-dialog" style="padding-top:200px;">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                            <span class="white">×</span>
+                        </button>
+                        <span><span></span>更换所属机构</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    body
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <button data-dismiss="modal" class="btn btn-sm btn-danger pull-left">
+                        <i class="icon-remove"></i>
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row modal-row">
+    <div tabindex="-1" class="modal fade" id="add-new-bankcard" style="z-index:99999" aria-hidden="true">
+        <div class="modal-dialog" style="padding-top:200px;">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                            <span class="white">×</span>
+                        </button>
+                        <span><span></span>更换所属机构</span>
+                    </div>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row form-group">
+                        <label class="col-xs-12">持卡人姓名</label>
+                        <div class="col-xs-12">
+                            <input type="text" readonly="readonly" value="" class="col-xs-12" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-xs-12">银行名称</label>
+                        <div class="col-xs-12">
+                            <select id="addnew_bankname" class="col-xs-12">
+                                <option value="-1">===请选择银行===</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-xs-12">开户地</label>
+                        <div class="col-xs-12">
+                            <select id="addnew_province" class="col-xs-5"></select>
+                            <div class="col-xs-2">&nbsp;</div>
+                            <select id="addnew_city" class="col-xs-5"></select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-xs-12" for="addnew_branchbank">支行信息</label>
+                        <div class="col-xs-12">
+                            <select id="addnew_branchbank" data-placeholder="===请选择银行==="></select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-xs-12">银行卡号</label>
+                        <div class="col-xs-12">
+                            <input type="text" id="addnew_bankcardno" class="col-xs-12" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <button data-dismiss="modal" class="btn btn-sm btn-danger pull-left">
+                        <i class="icon-remove"></i>
+                        关闭
+                    </button>
+                    <button id="btnBindNewBankCard" class="btn btn-sm btn-success pull-right">
+                        <i class="icon-ok"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.DataAccess", "Winner.User.DataAccess\Winner.User.DataAccess.csproj", "{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.Entities", "Winner.User.Entities\Winner.User.Entities.csproj", "{607348DC-3EE7-42AA-9388-99A52421C35F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.Facade", "Winner.User.Facade\Winner.User.Facade.csproj", "{82EFA7CB-4BEF-4C68-86B4-6355ECBF999F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.WebApi", "Winner.User.WebApi\Winner.User.WebApi.csproj", "{974C699F-F105-443D-B361-C1249647D51C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.WebAdmin", "Winner.User.WebAdmin\Winner.User.WebAdmin.csproj", "{7B8D6D1F-A7E4-48CE-8937-0771ECF549D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.User.UnitTest", "Winner.User.UnitTest\Winner.User.UnitTest.csproj", "{1B49B45C-8261-40CB-918D-2FD102AFDDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winner.Consignee", "Winner.Consignee\Winner.Consignee.csproj", "{84835422-66AD-4ACD-8962-FB2D965334C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{607348DC-3EE7-42AA-9388-99A52421C35F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{607348DC-3EE7-42AA-9388-99A52421C35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{607348DC-3EE7-42AA-9388-99A52421C35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{607348DC-3EE7-42AA-9388-99A52421C35F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82EFA7CB-4BEF-4C68-86B4-6355ECBF999F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82EFA7CB-4BEF-4C68-86B4-6355ECBF999F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82EFA7CB-4BEF-4C68-86B4-6355ECBF999F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82EFA7CB-4BEF-4C68-86B4-6355ECBF999F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{974C699F-F105-443D-B361-C1249647D51C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{974C699F-F105-443D-B361-C1249647D51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{974C699F-F105-443D-B361-C1249647D51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{974C699F-F105-443D-B361-C1249647D51C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8D6D1F-A7E4-48CE-8937-0771ECF549D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8D6D1F-A7E4-48CE-8937-0771ECF549D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8D6D1F-A7E4-48CE-8937-0771ECF549D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8D6D1F-A7E4-48CE-8937-0771ECF549D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B49B45C-8261-40CB-918D-2FD102AFDDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B49B45C-8261-40CB-918D-2FD102AFDDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B49B45C-8261-40CB-918D-2FD102AFDDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B49B45C-8261-40CB-918D-2FD102AFDDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84835422-66AD-4ACD-8962-FB2D965334C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84835422-66AD-4ACD-8962-FB2D965334C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84835422-66AD-4ACD-8962-FB2D965334C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84835422-66AD-4ACD-8962-FB2D965334C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Winner.User.DataAccess\\Winner.User.DataAccess.csproj
+		SccProjectName1 = Winner.User.DataAccess
+		SccLocalPath1 = Winner.User.DataAccess
+		SccProjectUniqueName2 = Winner.User.Entities\\Winner.User.Entities.csproj
+		SccProjectName2 = Winner.User.Entities
+		SccLocalPath2 = Winner.User.Entities
+		SccProjectUniqueName3 = Winner.User.Facade\\Winner.User.Facade.csproj
+		SccProjectName3 = Winner.User.Facade
+		SccLocalPath3 = Winner.User.Facade
+		SccProjectUniqueName4 = Winner.User.WebApi\\Winner.User.WebApi.csproj
+		SccProjectName4 = Winner.User.WebApi
+		SccLocalPath4 = Winner.User.WebApi
+		SccProjectUniqueName5 = Winner.User.WebAdmin\\Winner.User.WebAdmin.csproj
+		SccProjectName5 = Winner.User.WebAdmin
+		SccLocalPath5 = Winner.User.WebAdmin
+		SccProjectUniqueName6 = Winner.User.UnitTest\\Winner.User.UnitTest.csproj
+		SccProjectName6 = Winner.User.UnitTest
+		SccLocalPath6 = Winner.User.UnitTest
+		SccProjectUniqueName7 = Winner.Consignee\\Winner.Consignee.csproj
+		SccProjectName7 = Winner.Consignee
+		SccLocalPath7 = Winner.Consignee
+	EndGlobalSection
+EndGlobal

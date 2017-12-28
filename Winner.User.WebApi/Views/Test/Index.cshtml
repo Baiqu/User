@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    input{width:800px;}
+    form input{display:block;}
+</style>
+<form action="/user/info" method="post" target="_blank">
+    <input type="text" name="merchantno" value="qmgy_app" />
+    <input type="text" name="Data" value="" id="api_data"/>
+    <input type="text" name="Sign" value="signature" />
+    <button type="submit">提交</button>
+</form>
+<script type="text/javascript">
+    var data = {merchantNo:"qmgy_app",clientSource:1,clientVersion:"1.0.0",clientsystem:"aaa",interfaceVersion:1,NodeCode:"18675534882","Token":"token"};
+    document.getElementById("api_data").value = JSON.stringify(data);
+</script>
+
+<form action="/upload/service" method="post" enctype="multipart/form-data" target="_blank">
+    <input type="text" name="merchantno" value="qmgy_app" />
+    <input type="text" name="Data" value="" id="upload_api_data"/>
+    <input type="file" name="file" />
+    <input type="text" name="Sign" value="B9D4CBB15589533F9D618A7325BE981D" />
+    <button type="submit">提交</button>
+</form>
+<script type="text/javascript">
+    var api_data = { "MerchantNo": "qmgy_app", "ClientSource": 1, "ClientVersion": "1.0.0.1", "ClientSystem": "YT-T6", "InterfaceVersion": "1", "Token": "123123", "NodeCode": "17727559379" };
+    document.getElementById("upload_api_data").value = JSON.stringify(api_data);
+</script>

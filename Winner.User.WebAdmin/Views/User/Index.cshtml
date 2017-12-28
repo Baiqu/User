@@ -1,0 +1,337 @@
+﻿
+@{
+    ViewBag.Title = "会员管理";
+}
+
+
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="/Home">首页</a>
+        </li>
+        <li>
+            <i class="icon-group"></i>
+            <a href="/user">会员管理</a>
+        </li>
+        <li class="active">
+            会员
+        </li>
+    </ul>
+}
+@section pageheader{
+    <div class="page-header">
+        <h1>
+            会员信息
+            <small>
+                <i class="icon-double-angle-right"></i>
+                查看
+            </small>
+        </h1>
+    </div>
+}
+@section jquery_gritter_css{
+
+}
+@section customizeheader{
+    <script src="~/assets/ace/js/date-time/bootstrap-datepicker.min.js"></script>
+    <script src="~/assets/Scripts/ko-pager.js"></script>
+    <script src="http://staticfile.aiwsb.com/libs/winner_plugins/1.0.0/winner-mask.js"></script>
+    <script type="text/javascript">
+        function inlineAlert(selector) {
+            var self = this;
+            this.$wrap = $(selector);
+            this.success = function (message) {
+                var alert_c = $("<div class='alert alert-success'></div>");
+                var icon = $("<i class='icon-ok' style='margin-right:0.5em;'> </i>");
+                var msg_c = $("<span><span>").html(message);
+                alert_c.append(icon);
+                alert_c.append(msg_c);
+                $wrap.append(alert_c);
+            };
+            this.warning = function (message) {
+                var alert_c = $("<div class='alert alert-warning'></div>");
+                var icon = $("<i class='icon-remove' style='margin-right:0.5em;'> </i>");
+                var msg_c = $("<span><span>").html(message);
+                alert_c.append(icon);
+                alert_c.append(msg_c);
+                $wrap.append(alert_c);
+            };
+            this.error = function (message) {
+                var alert_c = $("<div class='alert alert-danger'></div>");
+                var icon = $("<i class='icon-remove-sign' style='margin-right:0.5em;'> </i>");
+                var msg_c = $("<span><span>").html(message);
+                alert_c.append(icon);
+                alert_c.append(msg_c);
+                $wrap.append(alert_c);
+            };
+            this.clear = function () {
+                this.$wrap.empty();
+            };
+            return this;
+        }
+    </script>
+    <script type="text/javascript">
+        koViewModel.prototype.disabledAccount = function (data) {
+            $("#disable_user_id").val(data.user_id);
+            $("#disable_user_code").val(data.user_code);
+            $("#disable_user_name").val(data.user_name);
+            $("#modal-table").modal({});
+        };
+        $(function () {
+            $(".date-picker").datepicker({ autoclose: true });
+            init();
+            $("#btnSearch").click(function () {
+                init(1);
+            });
+
+            $("#btnDisableAccount").click(function () {
+                $("#modal-table .modal-body").masked();
+                $(".alert_c").empty();
+                $.ajax({
+                    url: "/user/disable",
+                    type: "POST",
+                    data: {
+                        user_id: $("#disable_user_id").val(),
+                        days: $("#disable_elapse_time").val(),
+                        reason: $("#disable_reason").val()
+                    },
+                    success: function (json) {
+                        $("#modal-table .modal-body").masked("close");
+                        if (json.Success) {
+                            init();
+                            inlineAlert(".alert_c").success("封禁账号成功");
+                        } else {
+                            inlineAlert(".alert_c").error(json.Message);
+                        }
+                    },
+                    error: function () {
+                        $("#modal-table .modal-body").masked("close");
+                        inlineAlert(".alert_c").error("连接服务器失败");
+                    }
+                });
+            });
+
+            $("#modal-table").on("hidden.bs.modal", function () {
+                $("#modal-table .modal-body").masked("close");
+                $(".alert_c").empty();
+                $("#disable_user_id,#disable_user_code,#disable_user_name").val("");
+            });
+        });
+
+
+        function init(pageindex) {
+            //异步加载列表参数
+            var option = {
+                url: '@Url.Action("getusers","user")',//ajax url
+                eleid: 'user-list',//列表的容器ID
+                //pagesize:10,//每页数据条数
+                enablePaginate: true,//是否开启分页
+                //errorfunc:function(str){},//出现错误时的回调
+                //success:function(){},//执行成功的回调
+                //ajax请求时携带的参数，可以使用query:$("#form1").serialize()
+                query: $("#form1").serialize()
+            };
+            //加载指定页码的数据
+            if (pageindex && pageindex > 0) {
+                option.pageindex = pageindex;
+            }
+            //执行分页列表加载
+            $.DT.init(option);
+        }
+
+    </script>
+}
+<form id="form1" name="form1" target="_blank" method="post">
+    <div class="row form-horizontal">
+
+        <div class="col-xs-12 col-sm-3 form-group">
+            <label class="col-xs-12 col-sm-3">会员姓名</label>
+            <div class="col-sm-9 col-xs-12">
+                <input type="text" name="username" id="username" class="col-xs-12" placeholder="" />
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3 form-group">
+            <label class="col-xs-12 col-sm-3">会员账号</label>
+            <div class="col-sm-9 col-xs-12">
+                <input type="text" name="usercode" id="usercode" class="col-xs-12" placeholder="" />
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3 form-group">
+            <label class="col-xs-12 col-sm-3">会员级别</label>
+            <div class="col-sm-9 col-xs-12">
+                <input type="text" name="usergrade" id="usergrade" class="col-xs-12" placeholder="" />
+            </div>
+        </div>
+
+    </div>
+    <div class="row form-horizontal">
+
+        <div class="col-xs-12 col-sm-3 form-group">
+            <label class="col-xs-12 col-sm-3">注册时间</label>
+            <div class="col-sm-9 col-xs-12 input-group">
+                <input type="text" name="startdate" id="startdate" class="col-xs-12 date-picker" data-date-format="yyyy-mm-dd" placeholder="" />
+                <div class="input-group-addon">
+                    <i class="icon-calendar"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-3 form-group">
+            <label class="col-xs-12 col-sm-3">结束时间</label>
+            <div class="col-sm-9 col-xs-12 input-group">
+                <input type="text" name="enddate" id="enddate" class="col-xs-12 date-picker" data-date-format="yyyy-mm-dd" placeholder="" />
+                <div class="input-group-addon">
+                    <i class="icon-calendar"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-3 form-group">
+
+            <button type="button" class="btn btn-sm btn-primary" id="btnSearch" name="btnSearch">
+                <i class="icon-search"></i>
+                查询
+            </button>
+
+        </div>
+    </div>
+</form>
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-striped table-bordered table-hover dataTable" id="user-list">
+            <thead>
+                <tr>
+                    <th>会员信息</th>
+                    <th>会员级别</th>
+                    <th>认证信息</th>
+                    <th>会员状态</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody data-bind="template:{name:'user-item-template',foreach:Data}"></tbody>
+        </table>
+    </div>
+</div>
+<script type="text/x-jquery-tmpl" id="user-item-template">
+    <tr>
+        <td>
+            <p data-bind="text:user_name"></p>
+            <p data-bind="text:user_code"></p>
+        </td>
+        <td>
+            <span class="label label-default" data-bind="visible:user_level==0">普通会员</span>
+        </td>
+        <td>
+            <p>
+                <span class="label label-default" data-bind="visible:auth_status==0">未认证</span>
+                <span class="label label-info" data-bind="visible:auth_status==1">认证中</span>
+                <span class="label label-success" data-bind="visible:auth_status==2">已认证</span>
+                <span class="label label-danger" data-bind="visible:auth_status==4">认证失败</span>
+            </p>
+            <p data-bind="text:auth_time"></p>
+        </td>
+        <td>
+            <div data-bind="visible:is_locked==0">
+                <span class="label label-default" data-bind="visible:user_status==0">未激活</span>
+                <span class="label label-success" data-bind="visible:user_status==1">已激活</span>
+            </div>
+            <div data-bind="visible:is_locked==1">
+                <p class="no-padding no-margin"><span class="label label-danger">已锁定</span></p>
+                <p class="no-padding no-margin">锁定时间:<span style="margin:0 5px" data-bind="text:lock_minutes"></span>分钟</p>
+            </div>
+        </td>
+
+        <td data-bind="text:create_time"></td>
+        <td>
+            <a class="btn btn-sm btn-primary" data-bind="attr:{'href':'/user/details/'+user_id}">
+                <i class="icon-list-alt"></i>
+                详细信息
+            </a>
+            <button class="btn btn-sm btn-danger" data-bind="event:{'click':$root.disabledAccount}">
+                <i class="icon-remove-sign"></i>
+                封禁账号
+            </button>
+        </td>
+    </tr>
+</script>
+
+
+
+
+<div class="row modal-row">
+    <div tabindex="-1" class="modal fade" id="modal-table" style="display: none;z-index:99999" aria-hidden="true">
+        <div class="modal-dialog" style="padding-top:200px;">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                            <span class="white">×</span>
+                        </button>
+                        <span><span></span>封禁账号</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-horizontal">
+                        <div class="col-xs-12 col-sm-12 form-group">
+                            <label class="col-xs-12 col-sm-3">会员姓名</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="hidden" name="disable_user_id" id="disable_user_id" />
+                                <input type="text" name="disable_user_name" id="disable_user_name" class="col-xs-12" readonly="readonly" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 form-group">
+                            <label class="col-xs-12 col-sm-3">会员账号</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="text" name="disable_user_code" id="disable_user_code" class="col-xs-12" readonly="readonly" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 form-group">
+                            <label class="col-xs-12 col-sm-3">封禁期限</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <select class="chosen col-xs-12" name="disable_elapse_time" id="disable_elapse_time">
+                                    <option value="0">解除封禁</option>
+                                    <option value="1">封禁一天</option>
+                                    <option value="7">封禁一周</option>
+                                    <option value="30">封禁一月</option>
+                                    <option value="365">封禁一年</option>
+                                    <option value="36500">永久封禁</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 form-group">
+                            <label class="col-xs-12 col-sm-3">封禁原因</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input type="text" name="disable_reason" id="disable_reason" class="col-xs-12" placeholder="请输入封禁理由（用户可见）" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 alert_c">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <button data-dismiss="modal" class="btn btn-sm btn-danger pull-left">
+                        <i class="icon-remove"></i>
+                        关闭
+                    </button>
+                    <button class="btn btn-sm btn-primary pull-right" id="btnDisableAccount">
+                        <i class="icon-ok"></i>
+                        确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

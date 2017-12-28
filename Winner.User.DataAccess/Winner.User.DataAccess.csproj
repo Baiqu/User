@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0DA8ED49-0723-4D88-AC82-5FC1F72F31C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Winner.User.DataAccess</RootNamespace>
+    <AssemblyName>Winner.User.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\packages\winner.1.2.0\lib\net46\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Winner.Framework.Core, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\winner.core.1.2.1\lib\Winner.Framework.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Winner.Framework.Encrypt, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\winner.core.1.2.1\lib\Winner.Framework.Encrypt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Winner.Framework.Utils, Version=1.1.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\winner.core.1.2.1\lib\Winner.Framework.Utils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GenerateCode\Tapp_Account.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Bankinfo.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Bank_Account.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Identity.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Lock.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Organization.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Pwd_Change_His.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Recharge.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Role_Expires.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_Share_Report.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_User.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_User_Documents.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_User_Profile.generate.cs" />
+    <Compile Include="GenerateCode\Tnet_User_Role.generate.cs" />
+    <Compile Include="GenerateCode\Tsso_App.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Device.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Express.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Order.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Reward.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Sub_Order.generate.cs" />
+    <Compile Include="GenerateCode\Tvip_Upgrade_His.generate.cs" />
+    <Compile Include="GenerateCode\Vnet_City.generate.cs" />
+    <Compile Include="GenerateCode\Vnet_Identity.generate.cs" />
+    <Compile Include="GenerateCode\Vnet_Province.generate.cs" />
+    <Compile Include="GenerateCode\Vnet_Region.generate.cs" />
+    <Compile Include="GenerateCode\Vnet_User.generate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tapp_Account.cs" />
+    <Compile Include="Tnet_Bankinfo.cs" />
+    <Compile Include="Tnet_Bank_Account.cs" />
+    <Compile Include="Tnet_Identity.cs" />
+    <Compile Include="Tnet_Lock.cs" />
+    <Compile Include="Tnet_Recharge.cs" />
+    <Compile Include="Tnet_User.cs" />
+    <Compile Include="Tnet_User_Documents.cs" />
+    <Compile Include="Tnet_User_Profile.cs" />
+    <Compile Include="VipModules\Tvip_Order.cs" />
+    <Compile Include="VipModules\Tvip_Reward.cs" />
+    <Compile Include="VipModules\Tvip_Sub_Order.cs" />
+    <Compile Include="Vnet_Identity.cs" />
+    <Compile Include="Vnet_User.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Winner.User.Entities\Winner.User.Entities.csproj">
+      <Project>{607348dc-3ee7-42aa-9388-99a52421c35f}</Project>
+      <Name>Winner.User.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

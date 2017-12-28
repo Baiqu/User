@@ -1,0 +1,6 @@
+﻿.decimal { color: #fb7823 !important; padding: 0 5px; }
+.margin-left-1 { margin-left: 8.333333% !important; }
+table.table td > p { margin: 0; padding: 0; }
+.profile-info-row > div { min-height: 32px; }
+.ace-thumbnails .cboxElement > img { width:150px;height:150px;}
+#avatar{max-width:300px;max-height:300px;}
